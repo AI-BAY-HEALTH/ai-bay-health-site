@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-BAY-HEALTH -- Bavarian Medical Foundation Model</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:      #06091a;
+      --surface: #0d1428;
+      --border:  #1a2540;
+      --accent:  #3b82f6;
+      --accent2: #8b5cf6;
+      --text:    #e2e8f0;
+      --muted:   #64748b;
+      --c-img:   #38bdf8;
+      --c-path:  #facc15;
+      --c-om:    #4ade80;
+      --c-sig:   #fb923c;
+      --c-txt:   #c084fc;
+      --c-tab:   #f472b6;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---- HERO ---- */
+    #hero {
+      position: relative;
+      height: 100vh;
+      min-height: 600px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    #canvas-hero {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      padding: 2rem;
+      max-width: 820px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 1rem;
+      background: rgba(59,130,246,0.12);
+      border: 1px solid rgba(59,130,246,0.28);
+      border-radius: 100px;
+      font-size: 0.75rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.75rem;
+      animation: fadeUp 0.9s ease both;
+    }
+
+    .hero-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2s ease infinite;
+    }
+
+    h1.hero-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(3rem, 8vw, 5.8rem);
+      font-weight: 700;
+      line-height: 1.04;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #f1f5f9 20%, #93c5fd 55%, #a78bfa 85%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: fadeUp 0.9s 0.12s ease both;
+    }
+
+    .hero-sub {
+      margin-top: 1.4rem;
+      font-size: 1.1rem;
+      color: #94a3b8;
+      line-height: 1.7;
+      max-width: 580px;
+      margin-left: auto; margin-right: auto;
+      animation: fadeUp 0.9s 0.24s ease both;
+    }
+
+    .hero-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      justify-content: center;
+      margin-top: 2.2rem;
+      animation: fadeUp 0.9s 0.36s ease both;
+    }
+
+    .pill {
+      padding: 0.28rem 0.9rem;
+      border-radius: 100px;
+      font-size: 0.76rem;
+      font-weight: 500;
+      border: 1px solid;
+      letter-spacing: 0.02em;
+    }
+
+    .scroll-cue {
+      position: absolute;
+      bottom: 2.2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: #334155;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      animation: fadeIn 1s 2s ease both;
+    }
+
+    .scroll-cue span { display: block; width: 1px; height: 44px;
+      background: linear-gradient(to bottom, transparent, #334155); animation: scrollLine 2s ease infinite; }
+
+    /* ---- LAYOUT ---- */
+    .wrap { max-width: 1160px; margin: 0 auto; padding: 0 1.5rem; }
+
+    section { padding: 7rem 1.5rem; max-width: 1160px; margin: 0 auto; }
+
+    .full-bg { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .full-bg section { max-width: 1160px; }
+
+    .label {
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.9rem, 4vw, 3.1rem);
+      font-weight: 600;
+      line-height: 1.18;
+      letter-spacing: -0.01em;
+      margin-bottom: 1.1rem;
+    }
+
+    .desc { font-size: 1.05rem; color: #94a3b8; line-height: 1.78; max-width: 680px; }
+
+    /* ---- FOUNDATION MODEL SECTION ---- */
+    .fm-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      margin-top: 4rem;
+    }
+
+    .fm-point {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.8rem;
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+
+    .fm-point.show { opacity: 1; transform: none; }
+
+    .fm-icon {
+      flex-shrink: 0;
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.15rem;
+    }
+
+    .fm-point h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+
+    .fm-point p { font-size: 0.84rem; color: var(--muted); line-height: 1.65; }
+
+    /* ---- MODALITIES ---- */
+    .mod-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.1rem;
+      margin-top: 3.5rem;
+    }
+
+    .mod-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.6rem 1.4rem;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.25s, box-shadow 0.25s;
+    }
+
+    .mod-card.show { opacity: 1; transform: none; }
+    .mod-card:hover { transform: translateY(-4px) !important; }
+
+    .mod-icon { font-size: 1.6rem; margin-bottom: 0.85rem; }
+
+    .mod-card h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.45rem;
+    }
+
+    .mod-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+
+    .mod-tag {
+      display: inline-block;
+      margin-top: 0.8rem;
+      font-size: 0.7rem;
+      padding: 0.18rem 0.6rem;
+      border-radius: 100px;
+      border: 1px solid;
+      opacity: 0.65;
+    }
+
+    /* ---- EMBED CANVAS ---- */
+    #canvas-embed {
+      width: 100%;
+      height: 400px;
+      border-radius: 18px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      display: block;
+    }
+
+    .arch-points {
+      display: flex;
+      flex-direction: column;
+      gap: 1.6rem;
+    }
+
+    .arch-point {
+      opacity: 0;
+      transform: translateX(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .arch-point.show { opacity: 1; transform: none; }
+
+    .arch-point h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    .arch-point p { font-size: 0.84rem; color: var(--muted); line-height: 1.65; }
+
+    /* ---- PHASES ---- */
+    .phases-wrap { margin-top: 4rem; position: relative; }
+
+    .phases-track {
+      position: absolute;
+      top: 22px; left: 0; right: 0;
+      height: 2px;
+      background: var(--border);
+      border-radius: 2px;
+    }
+
+    .phases-fill {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(to right, var(--accent), var(--accent2));
+      border-radius: 2px;
+      transition: width 1.6s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    .phases-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      position: relative;
+    }
+
+    .phase {
+      padding-top: 3.5rem;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .phase.show { opacity: 1; transform: none; }
+
+    .phase-dot {
+      position: absolute;
+      top: 14px;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--border);
+      border: 3px solid var(--bg);
+      transition: background 0.4s ease;
+    }
+
+    .phase.show .phase-dot { background: var(--accent); }
+
+    .phase-label { font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.4rem; }
+    .phase h3 { font-family: 'Space Grotesk', sans-serif; font-size: 0.97rem; font-weight: 600; margin-bottom: 0.45rem; }
+    .phase p { font-size: 0.81rem; color: var(--muted); line-height: 1.6; }
+
+    .phase-kpi {
+      display: inline-block;
+      margin-top: 0.75rem;
+      font-size: 0.7rem;
+      padding: 0.18rem 0.6rem;
+      border-radius: 6px;
+      background: rgba(59,130,246,0.1);
+      border: 1px solid rgba(59,130,246,0.2);
+      color: var(--accent);
+    }
+
+    /* ---- EMERGENT ---- */
+    .emerge-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.1rem;
+      margin-top: 3.5rem;
+    }
+
+    .emerge-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.8rem 1.6rem;
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.25s;
+      cursor: default;
+    }
+
+    .emerge-card.show { opacity: 1; transform: none; }
+    .emerge-card:hover { border-color: rgba(139,92,246,0.4); transform: translateY(-4px) !important; }
+
+    .emerge-emoji { font-size: 1.9rem; margin-bottom: 1rem; display: block; }
+    .emerge-card h3 { font-family: 'Space Grotesk', sans-serif; font-size: 0.96rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .emerge-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.65; }
+
+    .emerge-tag {
+      margin-top: 1rem;
+      font-size: 0.7rem;
+      color: var(--accent2);
+      font-style: italic;
+      opacity: 0.8;
+    }
+
+    /* ---- PARTNERS ---- */
+    .partners-section {
+      border-top: 1px solid var(--border);
+      padding: 4rem 1.5rem;
+      text-align: center;
+    }
+
+    .partners-label { font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 2.5rem; }
+
+    .partners-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem 4rem;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .partner {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #334155;
+      letter-spacing: 0.02em;
+      transition: color 0.2s;
+    }
+
+    .partner:hover { color: #94a3b8; }
+
+    /* ---- FOOTER ---- */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.8rem;
+      line-height: 1.9;
+    }
+
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ---- KEYFRAMES ---- */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; } to { opacity: 1; }
+    }
+
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    @keyframes scrollLine {
+      0%,100% { opacity: 0.2; } 50% { opacity: 0.8; }
+    }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 900px) {
+      .fm-layout { grid-template-columns: 1fr; gap: 2.5rem; }
+      .mod-grid  { grid-template-columns: repeat(2, 1fr); }
+      .emerge-grid { grid-template-columns: repeat(2, 1fr); }
+      .phases-grid { grid-template-columns: 1fr 1fr; }
+      .phases-track { display: none; }
+      .arch-layout { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      .mod-grid { grid-template-columns: 1fr; }
+      .emerge-grid { grid-template-columns: 1fr; }
+      .phases-grid { grid-template-columns: 1fr; }
+    }
+
+    .arch-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      margin-top: 4rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================ HERO -->
+<div id="hero">
+  <canvas id="canvas-hero"></canvas>
+  <div class="hero-inner">
+    <div class="hero-badge">AI.BAY Health Cluster &nbsp;--&nbsp; StMWK Bavaria</div>
+    <h1 class="hero-title">AI-BAY-HEALTH</h1>
+    <p class="hero-sub">A sovereign, multi-modal foundation model for medicine -- unifying imaging, omics, biosignals, clinical text, and tabular data into a single shared representation of human health.</p>
+    <div class="hero-pills">
+      <span class="pill" style="color:var(--c-img);border-color:rgba(56,189,248,.28);background:rgba(56,189,248,.07)">Imaging</span>
+      <span class="pill" style="color:var(--c-path);border-color:rgba(250,204,21,.28);background:rgba(250,204,21,.07)">Pathology</span>
+      <span class="pill" style="color:var(--c-om);border-color:rgba(74,222,128,.28);background:rgba(74,222,128,.07)">Omics</span>
+      <span class="pill" style="color:var(--c-sig);border-color:rgba(251,146,60,.28);background:rgba(251,146,60,.07)">Signals</span>
+      <span class="pill" style="color:var(--c-txt);border-color:rgba(192,132,252,.28);background:rgba(192,132,252,.07)">Clinical Text</span>
+      <span class="pill" style="color:var(--c-tab);border-color:rgba(244,114,182,.28);background:rgba(244,114,182,.07)">EHR / Tabular</span>
+    </div>
+  </div>
+  <div class="scroll-cue">Scroll<span></span></div>
+</div>
+
+<!-- ============================================================ WHAT IS A FOUNDATION MODEL -->
+<section id="foundation">
+  <div class="label">The Concept</div>
+  <h2>What is a Foundation Model?</h2>
+  <p class="desc">A foundation model is a large neural network pre-trained on vast, diverse data. Rather than training a narrow model for each task, a single powerful model learns general representations that any downstream application can build on -- by prompting, fine-tuning, or retrieval.</p>
+
+  <div class="fm-layout">
+    <div>
+      <div class="fm-point">
+        <div class="fm-icon" style="background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.22)">&#9651;</div>
+        <div>
+          <h3>Pre-trained on broad data</h3>
+          <p>Billions of parameters learn the structure of language, images, and biology from large, heterogeneous corpora -- developing a deep prior over the natural world.</p>
+        </div>
+      </div>
+      <div class="fm-point">
+        <div class="fm-icon" style="background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.22)">&#9670;</div>
+        <div>
+          <h3>A universal representation</h3>
+          <p>Any input -- an image, a sentence, a DNA sequence -- maps to a semantically meaningful vector. Related concepts are close in this space, regardless of their original format.</p>
+        </div>
+      </div>
+      <div class="fm-point">
+        <div class="fm-icon" style="background:rgba(74,222,128,.12);border:1px solid rgba(74,222,128,.22)">&#9632;</div>
+        <div>
+          <h3>The foundation for many tasks</h3>
+          <p>With lightweight adaptation, the same model powers diagnosis, prognosis, retrieval, generation, and clinical reasoning -- no full retraining required.</p>
+        </div>
+      </div>
+    </div>
+    <canvas id="canvas-fm" width="480" height="300" style="width:100%;border-radius:16px;background:var(--surface);border:1px solid var(--border);display:block"></canvas>
+  </div>
+</section>
+
+<!-- ============================================================ MODALITIES -->
+<div class="full-bg">
+  <section id="modalities">
+    <div class="label">What we integrate</div>
+    <h2>All of medicine, in one space</h2>
+    <p class="desc">Every patient generates data across many modalities that clinicians integrate intuitively but that AI systems treat as separate silos. We train specialised encoders for each domain and project them all into a unified 8192-dimensional shared embedding.</p>
+
+    <div class="mod-grid">
+      <div class="mod-card" style="--c:var(--c-img)">
+        <div class="mod-icon">&#129508;</div>
+        <h3 style="color:var(--c-img)">Imaging</h3>
+        <p>CT, MRI, X-ray, ultrasound. Volumetric and 2D encoders (MedSigLIP, CT-CLIP, Rad-DINO) learn anatomy and pathology from pixels and voxels.</p>
+        <span class="mod-tag" style="color:var(--c-img);border-color:rgba(56,189,248,.3)">Subproject A &nbsp;-- FAU / TUM</span>
+      </div>
+      <div class="mod-card">
+        <div class="mod-icon">&#129520;</div>
+        <h3 style="color:var(--c-path)">Pathology</h3>
+        <p>Gigapixel whole-slide images from surgical biopsies. Patch-level encoders (UNI, TITAN) map tissue morphology into the shared space at cellular resolution.</p>
+        <span class="mod-tag" style="color:var(--c-path);border-color:rgba(250,204,21,.3)">BRIDGE -- Radiology-Pathology</span>
+      </div>
+      <div class="mod-card">
+        <div class="mod-icon">&#129516;</div>
+        <h3 style="color:var(--c-om)">Omics</h3>
+        <p>Single-cell RNA, DNA sequences, proteomics. Foundation models (scGPT, Nicheformer) encode the molecular state of cells and tissues at nucleotide resolution.</p>
+        <span class="mod-tag" style="color:var(--c-om);border-color:rgba(74,222,128,.3)">FORTE -- Omics Integration</span>
+      </div>
+      <div class="mod-card">
+        <div class="mod-icon">&#128200;</div>
+        <h3 style="color:var(--c-sig)">Biosignals</h3>
+        <p>ECG, EEG, wearable sensor streams. Time-series transformers capture longitudinal physiological dynamics -- heartbeat to brainwave -- in compact vectors.</p>
+        <span class="mod-tag" style="color:var(--c-sig);border-color:rgba(251,146,60,.3)">Subproject C -- LMU</span>
+      </div>
+      <div class="mod-card">
+        <div class="mod-icon">&#128203;</div>
+        <h3 style="color:var(--c-txt)">Clinical Text</h3>
+        <p>Radiology reports, discharge summaries, clinical notes in German and English. A large VLM backbone acts as the universal semantic pivot across all modalities.</p>
+        <span class="mod-tag" style="color:var(--c-txt);border-color:rgba(192,132,252,.3)">Subproject A -- FAU / TUM</span>
+      </div>
+      <div class="mod-card">
+        <div class="mod-icon">&#128202;</div>
+        <h3 style="color:var(--c-tab)">EHR / Tabular</h3>
+        <p>Lab values, ICD codes, medications, demographics, FHIR records. TabPFN and EHR-adapted transformers encode the full structured clinical history.</p>
+        <span class="mod-tag" style="color:var(--c-tab);border-color:rgba(244,114,182,.3)">Subproject C -- LMU</span>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============================================================ ARCHITECTURE -->
+<section id="architecture">
+  <div class="label">The Architecture</div>
+  <h2>Converging on a shared space</h2>
+  <p class="desc">Each encoder produces a <strong style="color:var(--text)">TokenBundle</strong> -- a structured pointer to modality-specific features. The fusion layer projects all bundles into a single <strong style="color:var(--text)">SharedEmbedding</strong> of exactly 8192 dimensions, regardless of which modalities are available for a given patient.</p>
+
+  <div class="arch-layout">
+    <canvas id="canvas-embed"></canvas>
+    <div class="arch-points">
+      <div class="arch-point">
+        <h3>Text as the Universal Pivot</h3>
+        <p>Almost every medical dataset pairs data with text. We align imaging to text, and omics to text independently. Because Image ~ Text and Omics ~ Text, Image ~ Omics transitively -- without ever needing paired image-omics patients.</p>
+      </div>
+      <div class="arch-point">
+        <h3>Sovereign by Design</h3>
+        <p>Patient data never leaves the hospital. FAU, TUM, and LMU each maintain a local data lake and train locally. Only privacy-preserving gradients and embeddings are exchanged -- never raw clinical records.</p>
+      </div>
+      <div class="arch-point">
+        <h3>Missing Modality Robustness</h3>
+        <p>A patient with only a chest X-ray and a blood panel produces a valid SharedEmbedding identical in format to one with the full data. The fusion layer is explicitly trained to handle any combination of present and absent modalities.</p>
+      </div>
+      <div class="arch-point">
+        <h3>MCP as the Integration Layer</h3>
+        <p>Each modality service exposes its encoder as an MCP tool. The fusion orchestrator discovers and calls these tools at runtime -- the same protocol that governs modern LLM agent systems.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ ROADMAP -->
+<div class="full-bg">
+  <section id="roadmap">
+    <div class="label">The Roadmap</div>
+    <h2>From raw data to deployed model</h2>
+    <p class="desc">AI-BAY-HEALTH executes in four phases across 36 months, with 1.5 million GPU-hours at NHR@FAU (H200) and 3 million GPU-hours at JUPITER (GH200 via CRESCENDO), funded by the Bavarian State Ministry of Science and the Arts.</p>
+
+    <div class="phases-wrap">
+      <div class="phases-track"><div class="phases-fill" id="phases-fill"></div></div>
+      <div class="phases-grid">
+        <div class="phase">
+          <div class="phase-dot"></div>
+          <div class="phase-label">Phase 0 &nbsp;-- M1 to M3</div>
+          <h3>Sovereign Foundations</h3>
+          <p>Establish decentralised data lakes at FAU, TUM, LMU. Implement data readers for DICOM, NIfTI, h5ad, EDF, FHIR. Ingest public datasets. Set up the Globus data fabric.</p>
+          <span class="phase-kpi">Milestone M3: readers operational</span>
+        </div>
+        <div class="phase">
+          <div class="phase-dot"></div>
+          <div class="phase-label">Phase 1a -- M4 to M9</div>
+          <h3>Domain Expert Encoders</h3>
+          <p>Train specialised unimodal models: MedSigLIP for imaging, scGPT and Nicheformer for omics, Signal Transformer for ECG/EEG, TabPFN for EHR. Lock the 8192-dim interface.</p>
+          <span class="phase-kpi">Milestone M9: all encoders trained</span>
+        </div>
+        <div class="phase">
+          <div class="phase-dot"></div>
+          <div class="phase-label">Phase 1b -- M10 to M12</div>
+          <h3>Fusion and Alignment</h3>
+          <p>Project all encoders into the shared space via contrastive text-pivot alignment. Macro-micro alignment between radiology and pathology. Knowledge graph regularisation via UMLS/SNOMED.</p>
+          <span class="phase-kpi">Milestone M12: cross-modal retrieval live</span>
+        </div>
+        <div class="phase">
+          <div class="phase-dot"></div>
+          <div class="phase-label">Phase 2 -- M13 to M15</div>
+          <h3>VLM and Clinical Pilot</h3>
+          <p>Connect the 8192-dim embeddings to a large VLM backbone via soft-prompt injection. Deploy the AI-BAY-Box at UKER, TUM Klinikum, and LMU Klinikum. Submit the Nature paper draft.</p>
+          <span class="phase-kpi">Milestone M15: pilot at 3 sites</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============================================================ EMERGENT PROPERTIES -->
+<section id="emergent">
+  <div class="label">What we hope to discover</div>
+  <h2>Emergent properties of unification</h2>
+  <p class="desc">When all clinical modalities converge on a shared embedding space, capabilities arise that no single-modality model can achieve. These are scientific hypotheses -- not guarantees -- and testing them is at the core of why this project exists.</p>
+
+  <div class="emerge-grid">
+    <div class="emerge-card">
+      <span class="emerge-emoji">&#128269;</span>
+      <h3>Cross-Modal Retrieval</h3>
+      <p>Given an MRI scan, retrieve the most semantically similar pathology slides -- across institutions, without exchanging raw images. The embedding space dissolves modality boundaries.</p>
+      <div class="emerge-tag">Benchmark: Recall@K across radiology-pathology pairs</div>
+    </div>
+    <div class="emerge-card">
+      <span class="emerge-emoji">&#9889;</span>
+      <h3>Zero-Shot Rare Disease Diagnosis</h3>
+      <p>A disease with only three known cases in the training data. Because the VLM has seen its textual description, it can identify the imaging pattern in a new patient -- never having seen that exact combination before.</p>
+      <div class="emerge-tag">Enabled by: text-pivot alignment and VLM reasoning</div>
+    </div>
+    <div class="emerge-card">
+      <span class="emerge-emoji">&#129300;</span>
+      <h3>Missing Modality Imputation</h3>
+      <p>When a patient cannot undergo MRI, the model predicts what the MRI embedding would have looked like from their available CT and lab data. A quantifiable bound on the prediction uncertainty is included.</p>
+      <div class="emerge-tag">Technique: masked autoencoder training across modalities</div>
+    </div>
+    <div class="emerge-card">
+      <span class="emerge-emoji">&#128202;</span>
+      <h3>Molecular Prediction from Images</h3>
+      <p>Inferring a tumour's EGFR mutation status or immune infiltration directly from a radiological scan -- without genomic sequencing. A consequence of aligning imaging and omics in a shared space.</p>
+      <div class="emerge-tag">Requires: paired imaging-omics cohorts (BRIDGE / FORTE)</div>
+    </div>
+    <div class="emerge-card">
+      <span class="emerge-emoji">&#127963;</span>
+      <h3>Federated Multi-Site Generalisation</h3>
+      <p>Models trained at UKER, TUM Klinikum, and LMU Klinikum on disjoint patient populations generalise across all three sites, via shared embedding alignment -- without ever centralising data.</p>
+      <div class="emerge-tag">Privacy-preserving by construction; GDPR-compliant</div>
+    </div>
+    <div class="emerge-card">
+      <span class="emerge-emoji">&#127775;</span>
+      <h3>Conversational Clinical Intelligence</h3>
+      <p>A clinician asks: "Summarise the oncological risk for this patient given their last CT, three ECGs, and recent labs." The VLM backbone reasons across all modalities simultaneously, in natural language.</p>
+      <div class="emerge-tag">Target: AI-BAY-Box deployment at Milestone M15</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ PARTNERS -->
+<div class="partners-section">
+  <div class="wrap">
+    <div class="partners-label">Consortium -- 11 Bavarian Universities &amp; Research Centres</div>
+    <div class="partners-row">
+      <span class="partner">FAU Erlangen-Nurnberg</span>
+      <span class="partner">TU Munich</span>
+      <span class="partner">LMU Munich</span>
+      <span class="partner">Helmholtz Munich</span>
+      <span class="partner">UTN Nuremberg</span>
+      <span class="partner">UKER</span>
+      <span class="partner">TUM Klinikum</span>
+      <span class="partner">LMU Klinikum</span>
+      <span class="partner">Siemens Healthineers</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ FOOTER -->
+<footer>
+  <div class="wrap">
+    <p><strong style="color:var(--text)">AI-BAY-HEALTH</strong> &nbsp;--&nbsp; Bavarian Medical Foundation Model Initiative &nbsp;--&nbsp; funded by StMWK</p>
+    <p>
+      <a href="https://github.com/bkainz/AI-BAY-HEALTH">GitHub</a> &nbsp;|&nbsp;
+      <a href="https://ai-bay.eu">AI.BAY Initiative</a> &nbsp;|&nbsp;
+      <a href="https://lme.tf.fau.de">Pattern Recognition Lab FAU</a> &nbsp;|&nbsp;
+      <a href="https://www.kdd.in.tum.de">KDD Lab TUM</a>
+    </p>
+  </div>
+</footer>
+
+<script>
+/* ==============================================================
+   HERO CANVAS -- Multi-modal particle embedding space
+   ============================================================== */
+(function () {
+  const canvas = document.getElementById('canvas-hero');
+  const ctx    = canvas.getContext('2d');
+  let W, H, pts;
+
+  const COLS = [
+    [56,  189, 248],   // imaging
+    [250, 204, 21 ],   // pathology
+    [74,  222, 128],   // omics
+    [251, 146, 60 ],   // signals
+    [192, 132, 252],   // text
+    [244, 114, 182],   // tabular
+  ];
+
+  function resize() {
+    W = canvas.width  = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+    build();
+  }
+
+  function build() {
+    pts = [];
+    const n = Math.min(200, Math.floor(W * H / 5000));
+    for (let i = 0; i < n; i++) {
+      const col   = COLS[i % COLS.length];
+      const angle = (i / COLS.length) * Math.PI * 2 + Math.random() * 1.2;
+      const dist  = 0.1 + Math.random() * 0.38;
+      const ox    = W * 0.5 + Math.cos(angle) * W * dist + (Math.random() - 0.5) * 90;
+      const oy    = H * 0.5 + Math.sin(angle) * H * dist * 0.58 + (Math.random() - 0.5) * 60;
+      pts.push({ ox, oy, x: ox, y: oy,
+        col, r: 1.5 + Math.random() * 2.2,
+        a:   0.35 + Math.random() * 0.6,
+        ph:  Math.random() * Math.PI * 2,
+        sp:  0.003 + Math.random() * 0.009,
+      });
+    }
+  }
+
+  let frame = 0;
+  function tick() {
+    ctx.clearRect(0, 0, W, H);
+    const LINK = W * 0.1;
+
+    // connections
+    for (let i = 0; i < pts.length; i++) {
+      for (let j = i + 1; j < pts.length; j++) {
+        const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
+        const d  = Math.hypot(dx, dy);
+        if (d >= LINK) continue;
+        const t  = (1 - d / LINK) * 0.18;
+        const ci = pts[i].col, cj = pts[j].col;
+        const g  = ctx.createLinearGradient(pts[i].x, pts[i].y, pts[j].x, pts[j].y);
+        g.addColorStop(0, `rgba(${ci},${t})`);
+        g.addColorStop(1, `rgba(${cj},${t})`);
+        ctx.beginPath(); ctx.strokeStyle = g; ctx.lineWidth = 0.7;
+        ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(pts[j].x, pts[j].y); ctx.stroke();
+      }
+    }
+
+    // centre glow
+    const g = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, W * 0.2);
+    g.addColorStop(0, 'rgba(59,130,246,0.07)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+
+    // particles
+    for (const p of pts) {
+      p.x = p.ox + Math.cos(p.ph + frame * p.sp) * 26;
+      p.y = p.oy + Math.sin(p.ph + frame * p.sp * 0.75) * 17;
+      // slow drift to centre
+      p.ox += (W / 2 - p.ox) * 0.00006;
+      p.oy += (H / 2 - p.oy) * 0.00006;
+
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${p.col},${p.a})`; ctx.fill();
+      const gw = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 6);
+      gw.addColorStop(0, `rgba(${p.col},0.1)`); gw.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = gw; ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 6, 0, Math.PI * 2); ctx.fill();
+    }
+
+    frame++;
+    requestAnimationFrame(tick);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  tick();
+})();
+
+/* ==============================================================
+   FM CANVAS -- Data -> Foundation Model -> Applications
+   ============================================================== */
+(function () {
+  const c   = document.getElementById('canvas-fm');
+  const ctx = c.getContext('2d');
+  const W   = c.width, H = c.height;
+  let f     = 0, running = false;
+
+  const inputs = [
+    { y: 50,  label: 'CT Scans',   col: '#38bdf8' },
+    { y: 100, label: 'Genomes',    col: '#4ade80' },
+    { y: 150, label: 'ECG',        col: '#fb923c' },
+    { y: 200, label: 'Reports',    col: '#c084fc' },
+    { y: 250, label: 'Lab Values', col: '#f472b6' },
+  ];
+  const BOX = { x: 190, y: 100, w: 120, h: 115 };
+  const apps = [
+    { y: 65,  label: 'Diagnosis',  col: '#3b82f6' },
+    { y: 115, label: 'Retrieval',  col: '#8b5cf6' },
+    { y: 165, label: 'Generation', col: '#06b6d4' },
+    { y: 215, label: 'Prognosis',  col: '#10b981' },
+  ];
+
+  function rr(x, y, w, h, r) {
+    ctx.beginPath(); ctx.roundRect(x, y, w, h, r);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    const p = Math.min(f / 110, 1);
+
+    // Input blocks
+    inputs.forEach((inp, i) => {
+      const a = Math.max(0, Math.min(1, (p - i * 0.05) * 5));
+      if (!a) return;
+      ctx.globalAlpha = a;
+      rr(20, inp.y - 14, 110, 28, 7);
+      ctx.fillStyle = inp.col + '1a'; ctx.fill();
+      ctx.strokeStyle = inp.col + '55'; ctx.lineWidth = 1; ctx.stroke();
+      ctx.fillStyle = inp.col; ctx.font = '11px Inter,sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(inp.label, 75, inp.y);
+      ctx.globalAlpha = 1;
+
+      // Arrow
+      if (p > 0.3) {
+        const aa = Math.max(0, Math.min(1, (p - 0.3) * 4));
+        ctx.globalAlpha = aa * 0.4;
+        ctx.strokeStyle = inp.col; ctx.lineWidth = 1;
+        ctx.setLineDash([3, 5]);
+        ctx.beginPath(); ctx.moveTo(130, inp.y); ctx.lineTo(BOX.x, BOX.y + BOX.h / 2); ctx.stroke();
+        ctx.setLineDash([]); ctx.globalAlpha = 1;
+      }
+    });
+
+    // FM Box
+    if (p > 0.35) {
+      const ba = Math.min(1, (p - 0.35) * 4);
+      ctx.globalAlpha = ba;
+      const gr = ctx.createLinearGradient(BOX.x, BOX.y, BOX.x + BOX.w, BOX.y + BOX.h);
+      gr.addColorStop(0, '#1e3a8a'); gr.addColorStop(1, '#3b0764');
+      rr(BOX.x, BOX.y, BOX.w, BOX.h, 13);
+      ctx.fillStyle = gr; ctx.fill();
+      ctx.strokeStyle = '#3b82f688'; ctx.lineWidth = 1.5; ctx.stroke();
+      ctx.fillStyle = '#f1f5f9';
+      ctx.font = 'bold 12px "Space Grotesk",sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('Foundation', BOX.x + BOX.w / 2, BOX.y + BOX.h / 2 - 9);
+      ctx.fillText('Model', BOX.x + BOX.w / 2, BOX.y + BOX.h / 2 + 9);
+      ctx.globalAlpha = 1;
+    }
+
+    // Output apps
+    if (p > 0.65) {
+      apps.forEach((ap, i) => {
+        const a = Math.max(0, Math.min(1, (p - 0.65 - i * 0.05) * 6));
+        if (!a) return;
+        ctx.globalAlpha = a;
+        rr(330, ap.y - 14, 110, 28, 7);
+        ctx.fillStyle = ap.col + '1a'; ctx.fill();
+        ctx.strokeStyle = ap.col + '66'; ctx.lineWidth = 1; ctx.stroke();
+        ctx.fillStyle = ap.col;
+        ctx.font = '11px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(ap.label, 385, ap.y);
+
+        ctx.globalAlpha = a * 0.4;
+        ctx.strokeStyle = ap.col; ctx.lineWidth = 1; ctx.setLineDash([3, 5]);
+        ctx.beginPath(); ctx.moveTo(BOX.x + BOX.w, BOX.y + BOX.h / 2); ctx.lineTo(330, ap.y); ctx.stroke();
+        ctx.setLineDash([]); ctx.globalAlpha = 1;
+      });
+    }
+
+    f++;
+    if (f < 260) requestAnimationFrame(draw);
+  }
+
+  new IntersectionObserver(e => { if (e[0].isIntersecting && !running) { running = true; draw(); } }).observe(c);
+})();
+
+/* ==============================================================
+   EMBED CANVAS -- Animated shared embedding space clusters
+   ============================================================== */
+(function () {
+  const c   = document.getElementById('canvas-embed');
+  const ctx = c.getContext('2d');
+  let W, H, pts;
+
+  const CLUSTERS = [
+    { name: 'Imaging',   col: [56,  189, 248], angle: -0.45, d: 0.27 },
+    { name: 'Pathology', col: [250, 204, 21 ], angle:  0.55, d: 0.25 },
+    { name: 'Omics',     col: [74,  222, 128], angle:  Math.PI + 0.3,  d: 0.26 },
+    { name: 'Signals',   col: [251, 146, 60 ], angle:  Math.PI - 0.4,  d: 0.24 },
+    { name: 'Text',      col: [192, 132, 252], angle:  Math.PI * 0.62, d: 0.22 },
+    { name: 'Tabular',   col: [244, 114, 182], angle: -Math.PI * 0.6,  d: 0.23 },
+  ];
+
+  function build() {
+    W = c.width  = c.offsetWidth;
+    H = c.height = c.offsetHeight || 400;
+    pts = [];
+    CLUSTERS.forEach((cl, ci) => {
+      const cx = W / 2 + Math.cos(cl.angle) * W * cl.d;
+      const cy = H / 2 + Math.sin(cl.angle) * H * cl.d * 0.72;
+      for (let i = 0; i < 16; i++) {
+        const ox = cx + (Math.random() - 0.5) * W * 0.09;
+        const oy = cy + (Math.random() - 0.5) * H * 0.11;
+        pts.push({ x: ox, y: oy, ox, oy, col: cl.col, ci,
+          r: 2 + Math.random() * 2.4,
+          ph: Math.random() * Math.PI * 2,
+          sp: 0.005 + Math.random() * 0.012 });
+      }
+    });
+  }
+
+  let t = 0;
+  function tick() {
+    ctx.clearRect(0, 0, W, H);
+    const cx = W / 2, cy = H / 2;
+
+    // centre glow
+    const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, 65);
+    g.addColorStop(0, 'rgba(59,130,246,0.22)'); g.addColorStop(1, 'transparent');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+
+    // cluster-to-centre lines
+    CLUSTERS.forEach((cl, ci) => {
+      const kx = W / 2 + Math.cos(cl.angle) * W * cl.d;
+      const ky = H / 2 + Math.sin(cl.angle) * H * cl.d * 0.72;
+      const pulse = 0.14 + 0.07 * Math.sin(t * 0.02 + ci * 1.1);
+      ctx.beginPath();
+      ctx.strokeStyle = `rgba(${cl.col},${pulse})`;
+      ctx.lineWidth = 1; ctx.setLineDash([4, 6]);
+      ctx.moveTo(kx, ky); ctx.lineTo(cx, cy); ctx.stroke();
+      ctx.setLineDash([]);
+      // label
+      const lx = kx + Math.cos(cl.angle) * 36;
+      const ly = ky + Math.sin(cl.angle) * 24;
+      ctx.fillStyle = `rgba(${cl.col},0.65)`;
+      ctx.font = '10px Inter,sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText(cl.name, lx, ly);
+    });
+
+    // intra-cluster connections
+    for (let i = 0; i < pts.length; i++) {
+      for (let j = i + 1; j < pts.length; j++) {
+        if (pts[i].ci !== pts[j].ci) continue;
+        const d = Math.hypot(pts[i].x - pts[j].x, pts[i].y - pts[j].y);
+        const lim = W * 0.09;
+        if (d >= lim) continue;
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(${pts[i].col},${(1 - d / lim) * 0.28})`;
+        ctx.lineWidth = 0.5;
+        ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(pts[j].x, pts[j].y); ctx.stroke();
+      }
+    }
+
+    // points
+    pts.forEach(p => {
+      p.x = p.ox + Math.cos(p.ph + t * p.sp) * 13;
+      p.y = p.oy + Math.sin(p.ph + t * p.sp * 0.8) * 9;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${p.col},0.8)`; ctx.fill();
+    });
+
+    // centre node
+    ctx.beginPath(); ctx.arc(cx, cy, 9, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(248,250,252,0.92)'; ctx.fill();
+    ctx.fillStyle = 'rgba(148,163,184,0.75)';
+    ctx.font = '9.5px Inter,sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('8192-dim', cx, cy + 23);
+
+    t++;
+    requestAnimationFrame(tick);
+  }
+
+  let started = false;
+  new IntersectionObserver(e => {
+    if (e[0].isIntersecting && !started) { started = true; build(); tick(); }
+  }).observe(c);
+  window.addEventListener('resize', () => { if (started) build(); });
+})();
+
+/* ==============================================================
+   SCROLL REVEAL via IntersectionObserver
+   ============================================================== */
+(function () {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('show');
+      io.unobserve(e.target);
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fm-point').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 0.12}s`; io.observe(el);
+  });
+  document.querySelectorAll('.mod-card').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 0.07}s`; io.observe(el);
+  });
+  document.querySelectorAll('.arch-point').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 0.1}s`; io.observe(el);
+  });
+  document.querySelectorAll('.phase').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 0.15}s`; io.observe(el);
+  });
+  document.querySelectorAll('.emerge-card').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 0.09}s`; io.observe(el);
+  });
+
+  // Phase progress bar
+  const fill = document.getElementById('phases-fill');
+  new IntersectionObserver(e => {
+    if (e[0].isIntersecting) {
+      setTimeout(() => { fill.style.width = '78%'; }, 250);
+    }
+  }, { threshold: 0.3 }).observe(fill);
+})();
+</script>
+</body>
+</html>
