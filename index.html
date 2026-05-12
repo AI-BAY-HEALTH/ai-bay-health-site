@@ -9,21 +9,21 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg:        #06091a;
-      --surface:   #0d1428;
-      --border:    #1a2540;
+      --bg:        #f4f8fd;   /* Bavarian white -- light, clean */
+      --surface:   #e8f0fb;   /* Bavarian light blue surface */
+      --border:    rgba(0,101,189,0.13);
       --accent:    #0065BD;   /* Bayernblau -- official Freistaat Bayern blue */
-      --accent2:   #5b8dd9;
-      --text:      #e8edf4;
-      --muted:     #64748b;
-      --c-img:     #38bdf8;
-      --c-path:    #facc15;
-      --c-om:      #4ade80;
-      --c-sig:     #fb923c;
-      --c-txt:     #c084fc;
-      --c-tab:     #f472b6;
-      --bavarian:  #0065BD;   /* Bayernblau */
-      --bavarian2: #004f96;   /* darker shade for depth */
+      --accent2:   #004f96;   /* darker Bavarian blue */
+      --text:      #071b3a;   /* deep Bavarian navy */
+      --muted:     #3d5a7a;
+      --c-img:     #0284c7;
+      --c-path:    #c97a00;
+      --c-om:      #15803d;
+      --c-sig:     #c2410c;
+      --c-txt:     #7e22ce;
+      --c-tab:     #be185d;
+      --bavarian:  #0065BD;
+      --bavarian2: #004f96;
     }
 
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -38,17 +38,6 @@
     }
 
     /* ---- BAVARIAN IDENTITY ---- */
-
-    /* Top Rauten banner -- references the Bavarian flag */
-    #rauten-banner {
-      height: 8px;
-      background: repeating-linear-gradient(
-        90deg,
-        #0065BD 0px, #0065BD 16px,
-        #ffffff 16px, #ffffff 32px
-      );
-      opacity: 0.9;
-    }
 
     /* Rauten (diamond lozenge) tile used as texture across sections */
     .rauten-bg {
@@ -73,7 +62,25 @@
       justify-content: center;
       text-align: center;
       overflow: hidden;
+      /* Rich Bavarian blue -- echoes the Bavarian flag */
+      background: linear-gradient(160deg, #00153a 0%, #002f7a 45%, #0057a8 100%);
     }
+
+    /* Hero text overrides -- white on the dark blue hero */
+    #hero .hero-badge {
+      color: rgba(255,255,255,0.88);
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.22);
+    }
+    #hero .hero-badge::before { background: rgba(255,255,255,0.7); }
+    #hero h1.hero-title {
+      background: linear-gradient(135deg, #ffffff 30%, #a8d4f5 65%, #5baee8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    #hero .hero-sub  { color: rgba(255,255,255,0.72); }
+    #hero .scroll-cue { color: rgba(255,255,255,0.3); }
 
     #canvas-hero {
       position: absolute;
@@ -94,8 +101,8 @@
       align-items: center;
       gap: 0.5rem;
       padding: 0.35rem 1rem;
-      background: rgba(59,130,246,0.12);
-      border: 1px solid rgba(59,130,246,0.28);
+      background: rgba(0,101,189,0.12);
+      border: 1px solid rgba(0,101,189,0.28);
       border-radius: 100px;
       font-size: 0.75rem;
       letter-spacing: 0.14em;
@@ -180,6 +187,9 @@
 
     .full-bg { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
     .full-bg section { max-width: 1160px; }
+    /* On light background, section text is dark */
+    .full-bg h2 { color: var(--text); }
+    .full-bg .desc { color: var(--muted); }
 
     .label {
       font-size: 0.72rem;
@@ -246,9 +256,9 @@
     }
 
     .mod-card {
-      background: var(--bg);
+      background: #ffffff;
       border: 1px solid var(--border);
-      border-top: 2px solid var(--bavarian);
+      border-top: 3px solid var(--bavarian);
       border-radius: 16px;
       padding: 1.6rem 1.4rem;
       opacity: 0;
@@ -268,6 +278,7 @@
       margin-bottom: 0.45rem;
     }
 
+    .mod-card h3 { color: var(--text); }
     .mod-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
 
     .mod-tag {
@@ -370,8 +381,8 @@
       font-size: 0.7rem;
       padding: 0.18rem 0.6rem;
       border-radius: 6px;
-      background: rgba(59,130,246,0.1);
-      border: 1px solid rgba(59,130,246,0.2);
+      background: rgba(0,101,189,0.1);
+      border: 1px solid rgba(0,101,189,0.2);
       color: var(--accent);
     }
 
@@ -384,7 +395,7 @@
     }
 
     .emerge-card {
-      background: var(--surface);
+      background: #ffffff;
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 1.8rem 1.6rem;
@@ -398,15 +409,15 @@
     .emerge-card:hover { border-color: rgba(0,101,189,0.45); transform: translateY(-4px) !important; box-shadow: 0 8px 32px rgba(0,101,189,0.15); }
 
     .emerge-emoji { font-size: 1.9rem; margin-bottom: 1rem; display: block; }
-    .emerge-card h3 { font-family: 'Space Grotesk', sans-serif; font-size: 0.96rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .emerge-card h3 { font-family: 'Space Grotesk', sans-serif; font-size: 0.96rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text); }
     .emerge-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.65; }
 
     .emerge-tag {
       margin-top: 1rem;
       font-size: 0.7rem;
-      color: var(--accent2);
+      color: var(--bavarian);
       font-style: italic;
-      opacity: 0.8;
+      opacity: 0.85;
     }
 
     /* ---- PARTNERS ---- */
@@ -636,16 +647,32 @@
       align-items: center;
       margin-top: 4rem;
     }
+    /* ---- HERO LOGO ---- */
+    #hero-logo {
+      position: absolute;
+      top: 1.5rem;
+      left: 2rem;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    #hero-logo img {
+      height: 52px;
+      width: auto;
+      filter: brightness(0) invert(1);
+      opacity: 0.92;
+    }
   </style>
 </head>
 <body>
 
-<!-- ============================================================ BAVARIAN HEADER STRIP -->
-<div id="rauten-banner"></div>
-
 <!-- ============================================================ HERO -->
 <div id="hero">
   <canvas id="canvas-hero"></canvas>
+  <div id="hero-logo">
+    <img src="assets/logo_.png" alt="AI-BAY-HEALTH">
+  </div>
   <div class="hero-inner">
     <div class="hero-badge">AI.BAY Health Cluster &nbsp;--&nbsp; Freistaat Bayern</div>
     <h1 class="hero-title">AI-BAY-HEALTH</h1>
@@ -671,14 +698,14 @@
   <div class="fm-layout">
     <div>
       <div class="fm-point">
-        <div class="fm-icon" style="background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.22)">&#9651;</div>
+        <div class="fm-icon" style="background:rgba(0,101,189,.12);border:1px solid rgba(0,101,189,.22)">&#9651;</div>
         <div>
           <h3>Pre-trained on broad data</h3>
           <p>Billions of parameters learn the structure of language, images, and biology from large, heterogeneous corpora -- developing a deep prior over the natural world.</p>
         </div>
       </div>
       <div class="fm-point">
-        <div class="fm-icon" style="background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.22)">&#9670;</div>
+        <div class="fm-icon" style="background:rgba(0,79,150,.12);border:1px solid rgba(0,79,150,.22)">&#9670;</div>
         <div>
           <h3>A universal representation</h3>
           <p>Any input -- an image, a sentence, a DNA sequence -- maps to a semantically meaningful vector. Related concepts are close in this space, regardless of their original format.</p>
@@ -692,7 +719,7 @@
         </div>
       </div>
     </div>
-    <canvas id="canvas-fm" width="480" height="300" style="width:100%;border-radius:16px;background:var(--surface);border:1px solid var(--border);display:block"></canvas>
+    <canvas id="canvas-fm" width="480" height="300" style="width:100%;border-radius:16px;background:#ffffff;border:1px solid var(--border);display:block"></canvas>
   </div>
 </section>
 
@@ -957,13 +984,14 @@
   const ctx    = canvas.getContext('2d');
   let W, H, pts;
 
+  // Bavarian palette: whites, blues, Bavarian gold
   const COLS = [
-    [56,  189, 248],   // imaging
-    [250, 204, 21 ],   // pathology
-    [74,  222, 128],   // omics
-    [251, 146, 60 ],   // signals
-    [192, 132, 252],   // text
-    [244, 114, 182],   // tabular
+    [255, 255, 255],   // white  (Bavarian flag)
+    [179, 215, 245],   // pale Bavarian blue
+    [100, 172, 224],   // mid Bavarian blue
+    [0,   101, 189],   // Bayernblau
+    [220, 236, 252],   // ice blue
+    [245, 200, 50 ],   // Bavarian gold (coat of arms)
   ];
 
   function resize() {
@@ -1011,9 +1039,9 @@
       }
     }
 
-    // centre glow
+    // centre glow -- white bloom on the Bavarian blue hero background
     const g = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, W * 0.2);
-    g.addColorStop(0, 'rgba(59,130,246,0.07)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+    g.addColorStop(0, 'rgba(255,255,255,0.08)'); g.addColorStop(1, 'rgba(0,0,0,0)');
     ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
 
     // particles
@@ -1182,7 +1210,7 @@
 
     // centre glow
     const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, 65);
-    g.addColorStop(0, 'rgba(59,130,246,0.22)'); g.addColorStop(1, 'transparent');
+    g.addColorStop(0, 'rgba(0,101,189,0.22)'); g.addColorStop(1, 'transparent');
     ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
 
     // cluster-to-centre lines
@@ -1225,10 +1253,10 @@
       ctx.fillStyle = `rgba(${p.col},0.8)`; ctx.fill();
     });
 
-    // centre node
+    // centre node -- Bavarian blue on light canvas background
     ctx.beginPath(); ctx.arc(cx, cy, 9, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(248,250,252,0.92)'; ctx.fill();
-    ctx.fillStyle = 'rgba(148,163,184,0.75)';
+    ctx.fillStyle = 'rgba(0,101,189,0.9)'; ctx.fill();
+    ctx.fillStyle = 'rgba(0,79,150,0.85)';
     ctx.font = '9.5px Inter,sans-serif'; ctx.textAlign = 'center';
     ctx.fillText('8192-dim', cx, cy + 23);
 
