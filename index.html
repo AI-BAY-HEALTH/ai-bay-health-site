@@ -9,19 +9,20 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg:      #06091a;
-      --surface: #0d1428;
-      --border:  #1a2540;
-      --accent:  #3b82f6;
-      --accent2: #8b5cf6;
-      --text:    #e2e8f0;
-      --muted:   #64748b;
-      --c-img:   #38bdf8;
-      --c-path:  #facc15;
-      --c-om:    #4ade80;
-      --c-sig:   #fb923c;
-      --c-txt:   #c084fc;
-      --c-tab:   #f472b6;
+      --bg:        #06091a;
+      --surface:   #0d1428;
+      --border:    #1a2540;
+      --accent:    #3b82f6;
+      --accent2:   #8b5cf6;
+      --text:      #e2e8f0;
+      --muted:     #64748b;
+      --c-img:     #38bdf8;
+      --c-path:    #facc15;
+      --c-om:      #4ade80;
+      --c-sig:     #fb923c;
+      --c-txt:     #c084fc;
+      --c-tab:     #f472b6;
+      --bavarian:  #1d71b8;   /* Freistaat Bayern blue */
     }
 
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -35,11 +36,17 @@
       -webkit-font-smoothing: antialiased;
     }
 
+    /* ---- BAVARIAN RAUTEN PATTERN ---- */
+    /* Classic Bavarian lozenge (Rauten) used as subtle texture */
+    .rauten-bg {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Cpolygon points='18,3 33,18 18,33 3,18' fill='%231d71b8' fill-opacity='0.055'/%3E%3C/svg%3E");
+    }
+
     /* ---- HERO ---- */
     #hero {
       position: relative;
       height: 100vh;
-      min-height: 600px;
+      min-height: 640px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -441,6 +448,152 @@
     }
 
     /* ---- RESPONSIVE ---- */
+    /* ---- HERO LOGO ---- */
+    .hero-logo {
+      width: clamp(180px, 38vw, 320px);
+      height: auto;
+      margin-bottom: 1.8rem;
+      filter: drop-shadow(0 0 40px rgba(59,130,246,0.35));
+      animation: fadeUp 0.9s ease both;
+    }
+
+    /* ---- FUNDING SECTION ---- */
+    .funding-section {
+      background: linear-gradient(180deg, #07112a 0%, #050d1f 100%);
+      border-top: 1px solid var(--border);
+      padding: 6rem 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Bavarian Rauten overlay on funding section */
+    .funding-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Cpolygon points='18,3 33,18 18,33 3,18' fill='%231d71b8' fill-opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    .funding-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .funding-header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+
+    .funding-header .label { justify-content: center; display: flex; }
+
+    .funding-header h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.7rem, 3.5vw, 2.6rem);
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+    }
+
+    .funding-header p {
+      color: #94a3b8;
+      font-size: 1rem;
+      max-width: 620px;
+      margin: 0 auto;
+      line-height: 1.75;
+    }
+
+    .funding-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .funder-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 2.5rem 2.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.6rem;
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+
+    .funder-card.show { opacity: 1; transform: none; }
+
+    .funder-logo-wrap {
+      display: flex;
+      align-items: center;
+      min-height: 80px;
+    }
+
+    .funder-logo-wrap img {
+      max-height: 72px;
+      max-width: 100%;
+      width: auto;
+      object-fit: contain;
+      object-position: left center;
+    }
+
+    .funder-body h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #0f172a;
+      margin-bottom: 0.55rem;
+    }
+
+    .funder-body p {
+      font-size: 0.86rem;
+      color: #475569;
+      line-height: 1.7;
+    }
+
+    .funder-body a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      margin-top: 1rem;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--bavarian);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(29,113,184,0.3);
+      padding-bottom: 1px;
+      transition: border-color 0.2s;
+    }
+
+    .funder-body a:hover { border-color: var(--bavarian); }
+
+    .funder-stat {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+      padding: 0.35rem 0.85rem;
+      background: rgba(29,113,184,0.08);
+      border: 1px solid rgba(29,113,184,0.18);
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--bavarian);
+    }
+
+    /* Bavarian stripe divider above funding section */
+    .bavarian-stripe {
+      height: 5px;
+      background: repeating-linear-gradient(
+        90deg,
+        var(--bavarian) 0px,
+        var(--bavarian) 22px,
+        #ffffff 22px,
+        #ffffff 44px
+      );
+      opacity: 0.55;
+    }
+
     @media (max-width: 900px) {
       .fm-layout { grid-template-columns: 1fr; gap: 2.5rem; }
       .mod-grid  { grid-template-columns: repeat(2, 1fr); }
@@ -448,6 +601,7 @@
       .phases-grid { grid-template-columns: 1fr 1fr; }
       .phases-track { display: none; }
       .arch-layout { grid-template-columns: 1fr; }
+      .funding-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 560px) {
@@ -471,7 +625,8 @@
 <div id="hero">
   <canvas id="canvas-hero"></canvas>
   <div class="hero-inner">
-    <div class="hero-badge">AI.BAY Health Cluster &nbsp;--&nbsp; StMWK Bavaria</div>
+    <img class="hero-logo" src="assets/logo.png" alt="AI-BAY-HEALTH">
+    <div class="hero-badge">AI.BAY Health Cluster &nbsp;--&nbsp; Freistaat Bayern</div>
     <h1 class="hero-title">AI-BAY-HEALTH</h1>
     <p class="hero-sub">A sovereign, multi-modal foundation model for medicine -- unifying imaging, omics, biosignals, clinical text, and tabular data into a single shared representation of human health.</p>
     <div class="hero-pills">
@@ -685,6 +840,60 @@
     </div>
   </div>
 </section>
+
+<!-- ============================================================ BAVARIAN STRIPE -->
+<div class="bavarian-stripe"></div>
+
+<!-- ============================================================ FUNDING & INFRASTRUCTURE -->
+<div class="funding-section">
+  <div class="funding-inner">
+    <div class="funding-header">
+      <div class="label">Proudly supported by</div>
+      <h2>Funded and powered by Bavaria</h2>
+      <p>AI-BAY-HEALTH exists because of the visionary commitment of the Bavarian state government and the world-class computing infrastructure it has built at Bavarian universities. We are deeply grateful for this support.</p>
+    </div>
+
+    <div class="funding-grid">
+
+      <!-- Ministry -->
+      <div class="funder-card">
+        <div class="funder-logo-wrap">
+          <img src="https://www.km.bayern.de/assets/logo_wortmarke_v2.svg"
+               alt="Bayerisches Staatsministerium fuer Unterricht und Kultus"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <span style="display:none;font-family:'Space Grotesk',sans-serif;font-size:0.85rem;font-weight:600;color:#0f172a;line-height:1.4">Bayerisches Staatsministerium<br>fuer Unterricht und Kultus</span>
+        </div>
+        <div class="funder-body">
+          <h3>Funded by the Free State of Bavaria</h3>
+          <p>AI-BAY-HEALTH is generously funded by the Bayerisches Staatsministerium fuer Unterricht und Kultus as part of Bavaria's landmark AI foundation model initiative. The Ministry's commitment to sovereign, cutting-edge AI research in healthcare enables eleven Bavarian universities and research centres to work as one -- building infrastructure that will serve patients and clinicians across the region for decades to come. We are profoundly grateful for this visionary support.</p>
+          <a href="https://www.km.bayern.de" target="_blank" rel="noopener">
+            www.km.bayern.de &#8599;
+          </a>
+        </div>
+      </div>
+
+      <!-- NHR@FAU -->
+      <div class="funder-card" style="transition-delay:0.12s">
+        <div class="funder-logo-wrap">
+          <img src="assets/nhrfau_logo.png"
+               alt="NHR@FAU -- National High Performance Computing at FAU Erlangen-Nurnberg">
+        </div>
+        <div class="funder-body">
+          <h3>Computing infrastructure: NHR@FAU</h3>
+          <p>All large-scale training runs for AI-BAY-HEALTH are executed on the Helma H200 GPU cluster at NHR@FAU (Friedrich-Alexander-Universitat Erlangen-Nurnberg), part of Germany's National High Performance Computing network. The project is allocated <strong>1.5 million GPU-hours</strong> on H200 hardware plus an additional <strong>3 million GPU-hours</strong> on the JUPITER GH200 system via CRESCENDO -- the compute backbone that makes training models at the scale of medicine possible.</p>
+          <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:0.9rem">
+            <span class="funder-stat">1.5M GPUh &nbsp;-- NHR@FAU Helma H200</span>
+            <span class="funder-stat">3M GPUh &nbsp;-- JUPITER GH200</span>
+          </div>
+          <a href="https://hpc.fau.de/" target="_blank" rel="noopener" style="margin-top:1rem">
+            hpc.fau.de &#8599;
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <!-- ============================================================ PARTNERS -->
 <div class="partners-section">
@@ -1038,6 +1247,10 @@
   });
   document.querySelectorAll('.emerge-card').forEach((el, i) => {
     el.style.transitionDelay = `${i * 0.09}s`; io.observe(el);
+  });
+
+  document.querySelectorAll('.funder-card').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 0.14}s`; io.observe(el);
   });
 
   // Phase progress bar
