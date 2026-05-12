@@ -36,6 +36,34 @@
       -webkit-font-smoothing: antialiased;
     }
 
+    /* ---- NAVBAR ---- */
+    #navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      transition: background 0.3s ease, backdrop-filter 0.3s ease, border-color 0.3s ease;
+      border-bottom: 1px solid transparent;
+    }
+
+    #navbar.scrolled {
+      background: rgba(6, 9, 26, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-color: var(--border);
+    }
+
+    #nav-logo {
+      height: 36px;
+      width: auto;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    #navbar.scrolled #nav-logo { opacity: 1; }
+
     /* ---- BAVARIAN RAUTEN PATTERN ---- */
     /* Classic Bavarian lozenge (Rauten) used as subtle texture */
     .rauten-bg {
@@ -621,6 +649,11 @@
 </head>
 <body>
 
+<!-- ============================================================ NAVBAR -->
+<header id="navbar">
+  <img src="assets/logo_transparent.png" alt="AI-BAY-HEALTH" id="nav-logo">
+</header>
+
 <!-- ============================================================ HERO -->
 <div id="hero">
   <canvas id="canvas-hero"></canvas>
@@ -930,6 +963,19 @@
 </footer>
 
 <script>
+/* ==============================================================
+   NAVBAR -- fade in logo once user scrolls past hero
+   ============================================================== */
+(function () {
+  const nav  = document.getElementById('navbar');
+  const hero = document.getElementById('hero');
+  const io   = new IntersectionObserver(
+    ([e]) => nav.classList.toggle('scrolled', !e.isIntersecting),
+    { threshold: 0.1 }
+  );
+  io.observe(hero);
+})();
+
 /* ==============================================================
    HERO CANVAS -- Multi-modal particle embedding space
    ============================================================== */
