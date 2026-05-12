@@ -29,7 +29,7 @@
     }
 
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; font-size: 118%; }
+    html { scroll-behavior: smooth; font-size: 121%; }
 
     body {
       background: var(--bg);
@@ -296,7 +296,7 @@
     /* ---- EMBED CANVAS ---- */
     #canvas-embed {
       width: 100%;
-      height: 400px;
+      height: 560px;
       border-radius: 18px;
       background: var(--bg);
       border: 1px solid var(--border);
@@ -1189,7 +1189,7 @@
 
   function build() {
     W = c.width  = c.offsetWidth;
-    H = c.height = c.offsetHeight || 400;
+    H = c.height = c.offsetHeight || 560;
     pts = [];
     CLUSTERS.forEach((cl, ci) => {
       const cx = W / 2 + Math.cos(cl.angle) * W * cl.d;
