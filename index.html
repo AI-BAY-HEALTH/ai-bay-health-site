@@ -625,7 +625,7 @@
 <div id="hero">
   <canvas id="canvas-hero"></canvas>
   <div class="hero-inner">
-    <img class="hero-logo" src="assets/logo.png" alt="AI-BAY-HEALTH">
+    <img class="hero-logo" src="assets/logo_transparent.png" alt="AI-BAY-HEALTH">
     <div class="hero-badge">AI.BAY Health Cluster &nbsp;--&nbsp; Freistaat Bayern</div>
     <h1 class="hero-title">AI-BAY-HEALTH</h1>
     <p class="hero-sub">A sovereign, multi-modal foundation model for medicine -- unifying imaging, omics, biosignals, clinical text, and tabular data into a single shared representation of human health.</p>
@@ -857,11 +857,14 @@
 
       <!-- Ministry -->
       <div class="funder-card">
-        <div class="funder-logo-wrap">
+        <div class="funder-logo-wrap" style="gap:1.2rem;align-items:center">
           <img src="https://www.km.bayern.de/assets/logo_wortmarke_v2.svg"
                alt="Bayerisches Staatsministerium fuer Unterricht und Kultus"
-               onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-          <span style="display:none;font-family:'Space Grotesk',sans-serif;font-size:0.85rem;font-weight:600;color:#0f172a;line-height:1.4">Bayerisches Staatsministerium<br>fuer Unterricht und Kultus</span>
+               style="max-height:64px;width:auto"
+               onerror="this.style.display='none'">
+          <img src="assets/km_bildmarke.png"
+               alt="Bayerisches Staatsministerium -- Bildmarke"
+               style="max-height:56px;width:auto">
         </div>
         <div class="funder-body">
           <h3>Funded by the Free State of Bavaria</h3>
