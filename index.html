@@ -12,9 +12,9 @@
       --bg:        #06091a;
       --surface:   #0d1428;
       --border:    #1a2540;
-      --accent:    #3b82f6;
-      --accent2:   #8b5cf6;
-      --text:      #e2e8f0;
+      --accent:    #0065BD;   /* Bayernblau -- official Freistaat Bayern blue */
+      --accent2:   #5b8dd9;
+      --text:      #e8edf4;
       --muted:     #64748b;
       --c-img:     #38bdf8;
       --c-path:    #facc15;
@@ -22,7 +22,8 @@
       --c-sig:     #fb923c;
       --c-txt:     #c084fc;
       --c-tab:     #f472b6;
-      --bavarian:  #1d71b8;   /* Freistaat Bayern blue */
+      --bavarian:  #0065BD;   /* Bayernblau */
+      --bavarian2: #004f96;   /* darker shade for depth */
     }
 
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -36,38 +37,30 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ---- NAVBAR ---- */
-    #navbar {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      padding: 0.75rem 1.5rem;
-      display: flex;
-      align-items: center;
-      transition: background 0.3s ease, backdrop-filter 0.3s ease, border-color 0.3s ease;
-      border-bottom: 1px solid transparent;
+    /* ---- BAVARIAN IDENTITY ---- */
+
+    /* Top Rauten banner -- references the Bavarian flag */
+    #rauten-banner {
+      height: 8px;
+      background: repeating-linear-gradient(
+        90deg,
+        #0065BD 0px, #0065BD 16px,
+        #ffffff 16px, #ffffff 32px
+      );
+      opacity: 0.9;
     }
 
-    #navbar.scrolled {
-      background: rgba(6, 9, 26, 0.85);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-color: var(--border);
-    }
-
-    #nav-logo {
-      height: 36px;
-      width: auto;
-      opacity: 0;
-      transition: opacity 0.4s ease;
-    }
-
-    #navbar.scrolled #nav-logo { opacity: 1; }
-
-    /* ---- BAVARIAN RAUTEN PATTERN ---- */
-    /* Classic Bavarian lozenge (Rauten) used as subtle texture */
+    /* Rauten (diamond lozenge) tile used as texture across sections */
     .rauten-bg {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Cpolygon points='18,3 33,18 18,33 3,18' fill='%231d71b8' fill-opacity='0.055'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cpolygon points='20,2 38,20 20,38 2,20' fill='%230065BD' fill-opacity='0.09'/%3E%3C/svg%3E");
+    }
+
+    /* Visible Rauten diamond accent strip used as section dividers */
+    .rauten-divider {
+      height: 32px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='32'%3E%3Cpolygon points='20,2 38,16 20,30 2,16' fill='%230065BD' fill-opacity='0.18'/%3E%3C/svg%3E");
+      background-repeat: repeat-x;
+      background-position: center;
     }
 
     /* ---- HERO ---- */
@@ -255,6 +248,7 @@
     .mod-card {
       background: var(--bg);
       border: 1px solid var(--border);
+      border-top: 2px solid var(--bavarian);
       border-radius: 16px;
       padding: 1.6rem 1.4rem;
       opacity: 0;
@@ -263,7 +257,7 @@
     }
 
     .mod-card.show { opacity: 1; transform: none; }
-    .mod-card:hover { transform: translateY(-4px) !important; }
+    .mod-card:hover { transform: translateY(-4px) !important; box-shadow: 0 8px 32px rgba(0,101,189,0.18); }
 
     .mod-icon { font-size: 1.6rem; margin-bottom: 0.85rem; }
 
@@ -401,7 +395,7 @@
     }
 
     .emerge-card.show { opacity: 1; transform: none; }
-    .emerge-card:hover { border-color: rgba(139,92,246,0.4); transform: translateY(-4px) !important; }
+    .emerge-card:hover { border-color: rgba(0,101,189,0.45); transform: translateY(-4px) !important; box-shadow: 0 8px 32px rgba(0,101,189,0.15); }
 
     .emerge-emoji { font-size: 1.9rem; margin-bottom: 1rem; display: block; }
     .emerge-card h3 { font-family: 'Space Grotesk', sans-serif; font-size: 0.96rem; font-weight: 600; margin-bottom: 0.5rem; }
@@ -477,14 +471,6 @@
 
     /* ---- RESPONSIVE ---- */
     /* ---- HERO LOGO ---- */
-    .hero-logo {
-      width: clamp(180px, 38vw, 320px);
-      height: auto;
-      margin-bottom: 1.8rem;
-      filter: drop-shadow(0 0 40px rgba(59,130,246,0.35));
-      animation: fadeUp 0.9s ease both;
-    }
-
     /* ---- FUNDING SECTION ---- */
     .funding-section {
       background: linear-gradient(180deg, #07112a 0%, #050d1f 100%);
@@ -554,15 +540,24 @@
     .funder-logo-wrap {
       display: flex;
       align-items: center;
-      min-height: 80px;
+      gap: 1rem;
+      min-height: 64px;
+      flex-wrap: wrap;
     }
 
     .funder-logo-wrap img {
-      max-height: 72px;
-      max-width: 100%;
+      height: 52px;
       width: auto;
+      max-width: 200px;
       object-fit: contain;
       object-position: left center;
+      flex-shrink: 0;
+    }
+
+    /* Bildmarke is square-ish, keep it compact */
+    .funder-logo-wrap img.bildmarke {
+      height: 48px;
+      max-width: 80px;
     }
 
     .funder-body h3 {
@@ -609,17 +604,13 @@
       color: var(--bavarian);
     }
 
-    /* Bavarian stripe divider above funding section */
-    .bavarian-stripe {
-      height: 5px;
-      background: repeating-linear-gradient(
-        90deg,
-        var(--bavarian) 0px,
-        var(--bavarian) 22px,
-        #ffffff 22px,
-        #ffffff 44px
-      );
-      opacity: 0.55;
+    /* NHR card logo: dark logos need light bg pill */
+    .logo-on-dark-pill {
+      background: white;
+      border-radius: 10px;
+      padding: 0.5rem 1rem;
+      display: inline-flex;
+      align-items: center;
     }
 
     @media (max-width: 900px) {
@@ -649,16 +640,13 @@
 </head>
 <body>
 
-<!-- ============================================================ NAVBAR -->
-<header id="navbar">
-  <img src="assets/logo_transparent.png" alt="AI-BAY-HEALTH" id="nav-logo">
-</header>
+<!-- ============================================================ BAVARIAN HEADER STRIP -->
+<div id="rauten-banner"></div>
 
 <!-- ============================================================ HERO -->
 <div id="hero">
   <canvas id="canvas-hero"></canvas>
   <div class="hero-inner">
-    <img class="hero-logo" src="assets/logo_transparent.png" alt="AI-BAY-HEALTH">
     <div class="hero-badge">AI.BAY Health Cluster &nbsp;--&nbsp; Freistaat Bayern</div>
     <h1 class="hero-title">AI-BAY-HEALTH</h1>
     <p class="hero-sub">A sovereign, multi-modal foundation model for medicine -- unifying imaging, omics, biosignals, clinical text, and tabular data into a single shared representation of human health.</p>
@@ -709,7 +697,7 @@
 </section>
 
 <!-- ============================================================ MODALITIES -->
-<div class="full-bg">
+<div class="full-bg rauten-bg">
   <section id="modalities">
     <div class="label">What we integrate</div>
     <h2>All of medicine, in one space</h2>
@@ -786,7 +774,7 @@
 </section>
 
 <!-- ============================================================ ROADMAP -->
-<div class="full-bg">
+<div class="full-bg rauten-bg">
   <section id="roadmap">
     <div class="label">The Roadmap</div>
     <h2>From raw data to deployed model</h2>
@@ -874,8 +862,8 @@
   </div>
 </section>
 
-<!-- ============================================================ BAVARIAN STRIPE -->
-<div class="bavarian-stripe"></div>
+<!-- ============================================================ BAVARIAN RAUTEN DIVIDER -->
+<div class="rauten-divider"></div>
 
 <!-- ============================================================ FUNDING & INFRASTRUCTURE -->
 <div class="funding-section">
@@ -890,14 +878,12 @@
 
       <!-- Ministry -->
       <div class="funder-card">
-        <div class="funder-logo-wrap" style="gap:1.2rem;align-items:center">
+        <div class="funder-logo-wrap">
+          <img class="bildmarke" src="assets/km_bildmarke.png"
+               alt="Bayerisches Staatsministerium -- Wappen">
           <img src="https://www.km.bayern.de/assets/logo_wortmarke_v2.svg"
                alt="Bayerisches Staatsministerium fuer Unterricht und Kultus"
-               style="max-height:64px;width:auto"
                onerror="this.style.display='none'">
-          <img src="assets/km_bildmarke.png"
-               alt="Bayerisches Staatsministerium -- Bildmarke"
-               style="max-height:56px;width:auto">
         </div>
         <div class="funder-body">
           <h3>Funded by the Free State of Bavaria</h3>
@@ -963,19 +949,6 @@
 </footer>
 
 <script>
-/* ==============================================================
-   NAVBAR -- fade in logo once user scrolls past hero
-   ============================================================== */
-(function () {
-  const nav  = document.getElementById('navbar');
-  const hero = document.getElementById('hero');
-  const io   = new IntersectionObserver(
-    ([e]) => nav.classList.toggle('scrolled', !e.isIntersecting),
-    { threshold: 0.1 }
-  );
-  io.observe(hero);
-})();
-
 /* ==============================================================
    HERO CANVAS -- Multi-modal particle embedding space
    ============================================================== */
